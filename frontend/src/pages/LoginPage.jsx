@@ -2,7 +2,7 @@ import { useState,useMemo,useCallback } from "react";
 import { useAuth } from "../context/AuthContext";
 import { sendOtp } from "../services/otpManager";
 
-export function LoginPage() {
+export default function LoginPage() {
     const { sendOtp: goToOtp } = useAuth();
 
     const [email, setEmail] = useState("");

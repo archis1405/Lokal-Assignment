@@ -7,7 +7,7 @@ const initialState = {
 
 function authReducer(state, action){
     switch(action.type){
-        case "SEND OTP":
+        case "SEND_OTP":
             return {screen: "otp" , email : action.email};
         case "VERIFY_SUCCESS":
             return {screen : "session" , email: action.email};

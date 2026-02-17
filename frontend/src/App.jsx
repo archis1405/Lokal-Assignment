@@ -1,29 +1,16 @@
-import { useState } from "react";
+import { useAuth } from "./context/AuthContext";
 import LoginPage from "./pages/LoginPage";
 import OtpPage from "./pages/OtpPage";
 import SessionPage from "./pages/SessionPage";
 
-function App() {
-  const [step, setStep] = useState("login");
-  const [email, setEmail] = useState("");
+export default function App() {
+  const { screen } = useAuth();
 
-  const handleLoginNext = (userEmail) => {
-    setEmail(userEmail); 
-    setStep("otp");
-  };
-
-  const handleOtpNext = () => setStep("session");
-
-  const handleLogout = () => {
-    setEmail("");
-    setStep("login");
-  };
-
-  if (step === "login") return <LoginPage onNext={handleLoginNext} />;
-  if (step === "otp") return <OtpPage onNext={handleOtpNext} />;
-  if (step === "session") return <SessionPage email={email} onLogout={handleLogout} />;
-
-  return null;
+  return (
+    <>
+      {screen === "login"   && <LoginPage />}
+      {screen === "otp"     && <OtpPage />}
+      {screen === "session" && <SessionPage />}
+    </>
+  );
 }
-
-export default App;

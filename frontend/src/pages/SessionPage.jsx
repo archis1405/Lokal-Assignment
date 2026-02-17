@@ -1,33 +1,96 @@
-import { useState , useEffect } from "react";
+import { useState, useMemo, useCallback } from "react";
+import { useAuth } from "../context/AuthContext";
+import { useSessionTimer } from "../hooks/useSessionTimer";
+import { logLogout } from "../services/analytics";
 
-function SessionPage({email,onLogout}) {
+export default function SessionScreen() {
+  
+    const { email, logout } = useAuth();
 
-    const [elapsed, setElapsed] = useState(0);
-    const startTime = new Date();
+  
+    const [startTime] = useState(() => Date.now());
 
-    useEffect(() => {
-        const timer = setInterval(() => setElapsed((prev) => prev + 1), 1000);
-        return () => clearInterval(timer);
-    }, []);
+  
+    const { elapsed, formatted } = useSessionTimer(startTime);
 
-    const formatTime = (seconds) => {
-        const m = Math.floor(seconds / 60).toString().padStart(2, "0");
-        const s = (seconds % 60).toString().padStart(2, "0");
-        return `${m}:${s}`;
+  
+    const startTimeDisplay = useMemo(() => new Date(startTime).toLocaleTimeString(), [startTime]);
+
+  
+    const ring = useMemo(() => {
+    const r    = 44;
+    const circ = 2 * Math.PI * r;
+    const pct  = (elapsed % 60) / 60;
+    
+    return { 
+        circ, dashoffset: circ * (1 - pct) 
     };
+  
+}, [elapsed]);
 
+  
+const handleLogout = useCallback(() => {
+    
+    logLogout(email, elapsed);
+    logout();
+  
+}, [email, elapsed, logout]);
 
-    return (
-        <div style={{ textAlign: "center", marginTop: "80px" }}>
-            <h1>Welcome, {email}</h1>
-
-            <p>Session started at {startTime.toLocaleTimeString()}</p>
-            
-            <p>Elapsed time: {formatTime(elapsed)}</p>
-            
-            <button onClick={onLogout}>Logout</button>
+  
+return (
+    <div className="screen session-screen">
+      <div className="card card--wide">
+        <div className="brand">
+          <div className="brand-dot brand-dot--active" />
+          <span>LOKAL</span>
+          <span className="live-badge">LIVE</span>
         </div>
-    );
-}
 
-export default SessionPage;
+        <div className="user-card">
+          <div className="user-avatar">{email[0].toUpperCase()}</div>
+          <div className="user-email">{email}</div>
+          <div className="user-meta">Session started at {startTimeDisplay}</div>
+        </div>
+
+        <div className="timer">
+          <svg
+            className="timer__ring"
+            width={120}
+            height={120}
+            viewBox="0 0 100 100"
+            aria-label={`Session duration: ${formatted}`}>
+
+            <circle
+              cx="50" cy="50" r="44"
+              fill="none"
+              stroke="var(--ring-bg)"
+              strokeWidth="5"
+            />
+
+            <circle
+              cx="50" cy="50" r="44"
+              fill="none"
+              stroke="var(--accent)"
+              strokeWidth="5"
+              strokeLinecap="round"
+              strokeDasharray={ring.circ}
+              strokeDashoffset={ring.dashoffset}
+              transform="rotate(-90 50 50)"
+              style={{ transition: "stroke-dashoffset 0.9s linear" }}
+            />
+          </svg>
+
+          <div className="timer__label">
+            <span className="timer__value">{formatted}</span>
+            <span className="timer__sub">duration</span>
+          </div>
+        </div>
+
+        <button className="btn-logout" onClick={handleLogout}>
+          Logout
+        </button>
+
+      </div>
+    </div>
+  );
+}

@@ -68,7 +68,7 @@ body {
     0 0 0 1px rgba(255, 255, 255, 0.03);
 }
 
-.card--wide { max-width: 460px; gap: 24px; }
+.card--wide { max-width: 1000px; gap: 60px; }
 
 .brand {
   display: flex;
@@ -398,4 +398,106 @@ body {
   .card { padding: 28px 20px; }
   .otp-cell { width: 42px; height: 52px; font-size: 20px; }
   .heading { font-size: 24px; }
+}
+
+
+.digital-clock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 40px 0;
+}
+
+.clock-display {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #1a1d24 0%, #0f1116 100%);
+  border: 2px solid rgba(232, 255, 74, 0.15);
+  border-radius: 20px;
+  padding: 40px 56px;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.5),
+    0 0 60px rgba(232, 255, 74, 0.08);
+  backdrop-filter: blur(10px);
+}
+
+.clock-display::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 20px;
+  padding: 2px;
+  background: linear-gradient(135deg, rgba(232, 255, 74, 0.3), transparent 50%, rgba(232, 255, 74, 0.1));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.clock-digit {
+  font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+  font-size: 80px;
+  font-weight: 300;
+  color: #e8ff4a;
+  line-height: 1;
+  min-width: 56px;
+  text-align: center;
+  letter-spacing: 0.02em;
+  text-shadow: 
+    0 0 30px rgba(232, 255, 74, 0.5),
+    0 0 60px rgba(232, 255, 74, 0.25),
+    0 2px 4px rgba(0, 0, 0, 0.8);
+  filter: brightness(1.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.clock-separator {
+  font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+  font-size: 80px;
+  font-weight: 200;
+  color: #e8ff4a;
+  line-height: 1;
+  opacity: 0.9;
+  margin: 0 6px;
+  text-shadow: 
+    0 0 30px rgba(232, 255, 74, 0.5),
+    0 0 60px rgba(232, 255, 74, 0.25);
+  animation: classyBlink 2s ease-in-out infinite;
+}
+
+@keyframes classyBlink {
+  0%, 45% { opacity: 0.9; }
+  50%, 95% { opacity: 0.25; }
+  100% { opacity: 0.9; }
+}
+
+.clock-label {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  color: rgba(232, 255, 74, 0.5);
+  text-transform: uppercase;
+  font-family: var(--font-display);
+}
+
+.clock-display::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(255, 255, 255, 0.02) 50%,
+    transparent 100%
+  );
+  pointer-events: none;
+  border-radius: 18px;
 }

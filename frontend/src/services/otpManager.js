@@ -1,6 +1,6 @@
 import { logOtpGenerated, logOtpSuccess, logOtpFailure } from "./analytics";
 
-const BASE = "/api";
+const BASE = "http://localhost:4000/api";
 
 export async function sendOtp(email) {
   const res  = await fetch(`${BASE}/send-otp`, {
